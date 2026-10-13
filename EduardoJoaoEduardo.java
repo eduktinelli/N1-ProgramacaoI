@@ -1,6 +1,6 @@
 // Alunos:
-// NOME COMPLETO DO ALUNO 1
-// NOME COMPLETO DO ALUNO 2
+// Eduardo Kaua tinelli
+// Joao Eduardo De Olieveira Nascimento
 
 import java.util.Scanner;
 import java.util.ArrayList;
