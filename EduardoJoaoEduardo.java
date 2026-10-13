@@ -1,6 +1,6 @@
 // Alunos:
-// Eduardo Kaua tinelli
-// Joao Eduardo De Olieveira Nascimento
+// Eduardo Kaua Tinelli
+// Joao Eduardo De Oliveira Nascimento
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -67,6 +67,13 @@ class Aluno {
         this.nota2 = nota2;
     }
 
+//Calcula a média aritmética das duas notas
+
+    public double getMedia()
+    {
+        return (nota1 + nota2) / 2;
+    }
+
 }
 
 public class EduardoJoaoEduardo
@@ -90,17 +97,14 @@ public class EduardoJoaoEduardo
             System.out.println("6 - Alterar as Notas de um Aluno");
             System.out.println("7 - Remover um Aluno");
             System.out.println("0 - Sair");
-            System.out.print("Opção : ");
-
-            opcao = Integer.parseInt( teclado.nextLine() );
+            opcao = lerInteiro(teclado, "Opção : ");
 
             switch (opcao)
             {
                 case 1:
                 {
                     // Cadastrar um novo aluno, sem permitir matrícula repetida
-                    System.out.print("Matrícula: ");
-                    int matricula = Integer.parseInt( teclado.nextLine() );
+                    int matricula = lerInteiro(teclado, "Matrícula: ");
 
                     if (buscarPorMatricula(matricula) != null)
                     {
@@ -120,8 +124,7 @@ public class EduardoJoaoEduardo
                 case 2:
                 {
                     // Cadastrar as duas notas de um aluno já cadastrado
-                    System.out.print("Matrícula do aluno: ");
-                    int matricula = Integer.parseInt( teclado.nextLine() );
+                    int matricula = lerInteiro(teclado, "Matrícula do aluno: ");
 
                     Aluno aluno = buscarPorMatricula(matricula);
 
@@ -131,11 +134,8 @@ public class EduardoJoaoEduardo
                     }
                     else
                     {
-                        System.out.print("Nota 1: ");
-                        aluno.setNota1( Double.parseDouble( teclado.nextLine() ) );
-
-                        System.out.print("Nota 2: ");
-                        aluno.setNota2( Double.parseDouble( teclado.nextLine() ) );
+                        aluno.setNota1( lerNota(teclado, "Nota 1: ") );
+                        aluno.setNota2( lerNota(teclado, "Nota 2: ") );
 
                         System.out.println("Notas cadastradas para " + aluno.getNome() + ".");
                     }
@@ -162,8 +162,7 @@ public class EduardoJoaoEduardo
                 case 4:
                 {
                     // Buscar um aluno pela matrícula e mostrar os dados dele
-                    System.out.print("Matrícula: ");
-                    int matricula = Integer.parseInt( teclado.nextLine() );
+                    int matricula = lerInteiro(teclado, "Matrícula: ");
 
                     Aluno aluno = buscarPorMatricula(matricula);
 
@@ -179,11 +178,71 @@ public class EduardoJoaoEduardo
                 }
 
                 case 5:
+                {
+                    // Encontrar o aluno com a maior média aritmética
+                    if (alunos.isEmpty())
+                    {
+                        System.out.println("Nenhum aluno cadastrado.");
+                    }
+                    else
+                    {
+                        Aluno melhorAluno = alunos.get(0);
+
+                        for (Aluno aluno : alunos)
+                        {
+                            if (aluno.getMedia() > melhorAluno.getMedia())
+                            {
+                                melhorAluno = aluno;
+                            }
+                        }
+
+                        System.out.println("Aluno com a maior média: " + melhorAluno.getNome()
+                                + " | Média: " + String.format("%.2f", melhorAluno.getMedia()));
+                    }
+                    break;
+                }
+
                 case 6:
+                {
+                    // Alterar as notas de um aluno localizado pela matrícula
+                    int matricula = lerInteiro(teclado, "Matrícula do aluno: ");
+
+                    Aluno aluno = buscarPorMatricula(matricula);
+
+                    if (aluno == null)
+                    {
+                        System.out.println("Aluno não encontrado.");
+                    }
+                    else
+                    {
+                        System.out.println("Notas atuais de " + aluno.getNome()
+                                + ": Nota 1 = " + aluno.getNota1()
+                                + " | Nota 2 = " + aluno.getNota2());
+
+                        aluno.setNota1( lerNota(teclado, "Nova Nota 1: ") );
+                        aluno.setNota2( lerNota(teclado, "Nova Nota 2: ") );
+
+                        System.out.println("Notas alteradas com sucesso!");
+                    }
+                    break;
+                }
+
                 case 7:
                 {
-                    // Opções ainda não implementadas
-                    System.out.println("Ainda não implementado.");
+                    // Remover um aluno localizado pela matrícula
+                    int matricula = lerInteiro(teclado, "Matrícula do aluno: ");
+
+                    Aluno aluno = buscarPorMatricula(matricula);
+
+                    if (aluno == null)
+                    {
+                        System.out.println("Aluno não encontrado.");
+                    }
+                    else
+                    {
+                        alunos.remove(aluno);
+                        System.out.println("Aluno " + aluno.getNome() + " removido com sucesso!");
+                    }
                     break;
                 }
 
@@ -224,6 +283,49 @@ public class EduardoJoaoEduardo
         System.out.println("Matrícula: " + aluno.getMatricula()
                 + " | Nome: " + aluno.getNome()
                 + " | Nota 1: " + aluno.getNota1()
-                + " | Nota 2: " + aluno.getNota2());
+                + " | Nota 2: " + aluno.getNota2()
+                + " | Média: " + String.format("%.2f", aluno.getMedia()));
+    }
+
+    // Lê um número inteiro do teclado, repetindo a pergunta até o valor ser válido
+    static int lerInteiro(Scanner teclado, String mensagem)
+    {
+        while (true)
+        {
+            System.out.print(mensagem);
+
+            try
+            {
+                return Integer.parseInt( teclado.nextLine().trim() );
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("Valor inválido. Digite um número inteiro.");
+            }
+        }
+    }
+
+    // Lê uma nota de 0 a 10 do teclado, aceitando vírgula ou ponto como separador decimal
+    static double lerNota(Scanner teclado, String mensagem)
+    {
+        while (true)
+        {
+            System.out.print(mensagem);
+
+            try
+            {
+                double nota = Double.parseDouble( teclado.nextLine().trim().replace(',', '.') );
+
+                if (nota >= 0 && nota <= 10)
+                {
+                    return nota;
+                }
+                System.out.println("A nota deve estar entre 0 e 10.");
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println("Valor inválido. Digite um número.");
+            }
+        }
     }
 }
